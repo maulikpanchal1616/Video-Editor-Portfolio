@@ -5,9 +5,9 @@ export default function Admin() {
   const ADMIN_USER = "Het@Kano";
   const ADMIN_PASS = "Kano@1909";
 
-  const [isAuth, setIsAuth] = useState(
-    localStorage.getItem("adminAuth") === "true"
-  );
+  const [isAuth, setIsAuth] = useState(() => {
+  return localStorage.getItem("adminAuth") === "true";
+});
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
