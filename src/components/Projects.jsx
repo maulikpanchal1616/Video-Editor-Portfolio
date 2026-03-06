@@ -12,7 +12,7 @@ export default function Projects() {
 
       const querySnapshot = await getDocs(collection(db, "projects"));
 
-      const data = querySnapshot.docs.map(doc => ({
+      const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
@@ -37,14 +37,20 @@ export default function Projects() {
 
             <h3>{project.title}</h3>
 
+            {/* Image */}
             {project.type === "image" && (
-              <img src={project.media} alt="project"/>
+              <img src={project.media} alt="project" />
             )}
 
+            {/* Video */}
             {project.type === "video" && (
-              <video controls>
-                <source src={project.media} type="video/mp4" />
-              </video>
+              <iframe
+                src={project.media}
+                title="Project Video"
+                frameBorder="0"
+                allowFullScreen
+                className="project-video"
+              />
             )}
 
             <p>{project.text}</p>
