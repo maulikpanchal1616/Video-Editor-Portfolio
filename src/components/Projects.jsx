@@ -1,25 +1,60 @@
-import Project3DCard from "./Project3DCard";
+import { useEffect, useState } from "react";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Projects() {
-  const projects = JSON.parse(localStorage.getItem("projects")) || [];
+
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+
+    const fetchProjects = async () => {
+
+      const querySnapshot = await getDocs(collection(db, "projects"));
+
+      const data = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setProjects(data);
+    };
+
+    fetchProjects();
+
+  }, []);
 
   return (
-    <section className="projects" id="projects">
+    <section className="projects">
+
       <h2>My Projects</h2>
 
-      {projects.length === 0 && <p>No projects yet.</p>}
+      <div className="projects-grid">
 
-      {projects.map((group, index) => (
-        <div key={index} className="project-group">
-          <h3>{group.title}</h3>
+        {projects.map((project) => (
 
-          <div className="project-grid">
-            {group.items.map((item, i) => (
-              <Project3DCard key={i} item={item} />
-            ))}
+          <div key={project.id} className="project-card">
+
+            <h3>{project.title}</h3>
+
+            {project.type === "image" && (
+              <img src={project.media} alt="project"/>
+            )}
+
+            {project.type === "video" && (
+              <video controls>
+                <source src={project.media} type="video/mp4" />
+              </video>
+            )}
+
+            <p>{project.text}</p>
+
           </div>
-        </div>
-      ))}
+
+        ))}
+
+      </div>
+
     </section>
   );
 }
